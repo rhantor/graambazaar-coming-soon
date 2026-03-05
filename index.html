@@ -1,439 +1,621 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>গ্রামবাজার — আসছে খুব শীঘ্রই</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>গ্রামবাজার — আসছে খুব শীঘ্রই</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
+  <body>
+    <!-- CURSOR -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
 
-<body>
+    <!-- AMBIENT BACKGROUND -->
+    <div class="bg-canvas"></div>
+    <canvas id="particle-canvas"></canvas>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-  <!-- CURSOR -->
-  <div id="cursor"></div>
-  <div id="cursor-ring"></div>
-
-  <!-- AMBIENT BACKGROUND -->
-  <div class="bg-canvas"></div>
-  <canvas id="particle-canvas"></canvas>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-
-  <!-- ═══════════════════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════════════════
      ADMIN MODAL  (hidden — open via Ctrl+Shift+A)
 ══════════════════════════════════════════════════════════ -->
-  <div id="admin-modal">
-    <div class="admin-shell">
-
-      <!-- LOGIN VIEW -->
-      <div id="admin-login-view" style="display:flex;flex-direction:column;height:100%">
-        <div class="admin-topbar">
-          <div class="admin-brand">
-            <div class="admin-brand-dot"></div>
-            GraamBazaar Admin
-          </div>
-          <button id="admin-close" class="admin-close-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
-        <div class="admin-content">
-          <div class="login-center">
-            <div class="lock-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
+    <div id="admin-modal">
+      <div class="admin-shell">
+        <!-- LOGIN VIEW -->
+        <div
+          id="admin-login-view"
+          style="display: flex; flex-direction: column; height: 100%"
+        >
+          <div class="admin-topbar">
+            <div class="admin-brand">
+              <div class="admin-brand-dot"></div>
+              GraamBazaar Admin
             </div>
-            <h2>Admin Login</h2>
-            <p>GraamBazaar Project Dashboard</p>
-            <input type="email" id="admin-email" class="a-input" placeholder="ইমেইল এড্রেস" autocomplete="off">
-            <input type="password" id="admin-pass" class="a-input" placeholder="পাসওয়ার্ড">
-            <div class="login-err" id="login-err"></div>
-            <button id="login-btn" class="login-btn">লগইন করুন</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- PANEL VIEW -->
-      <div id="admin-panel-view" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-        <div class="admin-topbar">
-          <div class="admin-brand">
-            <div class="admin-brand-dot"></div>
-            GraamBazaar Admin
-          </div>
-          <div class="admin-tabrow">
-            <button class="a-tab on" data-tab="timeline">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="18" x2="21" y2="18" />
+            <button id="admin-close" class="admin-close-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
-              Timeline
-            </button>
-            <button class="a-tab" data-tab="stats">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="20" x2="18" y2="10" />
-                <line x1="12" y1="20" x2="12" y2="4" />
-                <line x1="6" y1="20" x2="6" y2="14" />
-              </svg>
-              Stats
             </button>
           </div>
-          <button id="admin-close" class="admin-close-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
-
-        <div class="admin-content">
-
-          <!-- TIMELINE PANEL -->
-          <div id="panel-timeline" class="a-panel on">
-            <div class="tl-admin-header">
-              <div class="tl-admin-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+          <div class="admin-content">
+            <div class="login-center">
+              <div class="lock-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-                Project Timeline
               </div>
-              <button id="add-milestone-btn" class="add-milestone-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
+              <h2>Admin Login</h2>
+              <p>GraamBazaar Project Dashboard</p>
+              <input
+                type="email"
+                id="admin-email"
+                class="a-input"
+                placeholder="ইমেইল এড্রেস"
+                autocomplete="off"
+              />
+              <input
+                type="password"
+                id="admin-pass"
+                class="a-input"
+                placeholder="পাসওয়ার্ড"
+              />
+              <div class="login-err" id="login-err"></div>
+              <button id="login-btn" class="login-btn">লগইন করুন</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL VIEW -->
+        <div
+          id="admin-panel-view"
+          style="
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+          "
+        >
+          <div class="admin-topbar">
+            <div class="admin-brand">
+              <div class="admin-brand-dot"></div>
+              GraamBazaar Admin
+            </div>
+            <div class="admin-tabrow">
+              <button class="a-tab on" data-tab="timeline">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
                 </svg>
-                নতুন মাইলস্টোন
+                Timeline
+              </button>
+              <button class="a-tab" data-tab="stats">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+                Stats
               </button>
             </div>
-
-            <!-- ADD/EDIT FORM -->
-            <div class="m-form" id="m-form">
-              <div class="m-form-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="16" />
-                  <line x1="8" y1="12" x2="16" y2="12" />
-                </svg>
-                <span id="m-form-title-text">নতুন মাইলস্টোন</span>
-              </div>
-              <div class="f-row">
-                <div class="f-group">
-                  <label class="f-label">মাইলস্টোনের নাম</label>
-                  <input type="text" id="f-title" class="f-input" placeholder="যেমন: ডেলিভারি পোর্টাল">
-                </div>
-                <div class="f-group">
-                  <label class="f-label">তারিখ</label>
-                  <input type="date" id="f-date" class="f-input">
-                </div>
-              </div>
-              <div class="f-group" style="margin-bottom:10px">
-                <label class="f-label">বিবরণ</label>
-                <input type="text" id="f-desc" class="f-input" placeholder="এই ধাপে কী করা হয়েছে বা হবে?">
-              </div>
-              <div class="f-row">
-                <div class="f-group">
-                  <label class="f-label">স্ট্যাটাস</label>
-                  <select id="f-status" class="f-input">
-                    <option value="pending">Pending — অপেক্ষমান</option>
-                    <option value="inprogress">In Progress — চলছে</option>
-                    <option value="done">Done — সম্পন্ন</option>
-                  </select>
-                </div>
-                <div class="f-group">
-                  <label class="f-label">ক্রম নম্বর</label>
-                  <input type="number" id="f-order" class="f-input" placeholder="1, 2, 3 …" min="1">
-                </div>
-              </div>
-              <div class="f-group" style="margin-bottom:10px">
-                <label class="f-label">আইকন</label>
-                <div class="icon-select-wrap">
-                  <div class="icon-preview" id="icon-preview-btn">
-                    <span id="icon-preview-svg">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <polygon
-                          points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                      </svg>
-                    </span>
-                    <span style="color:rgba(255,255,255,.4);font-size:.82rem">আইকন বেছে নিন</span>
-                    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </div>
-                  <div class="icon-dropdown" id="icon-dropdown">
-                    <div id="icon-grid"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="f-row-actions">
-                <button class="f-cancel" id="f-cancel">বাতিল</button>
-                <button class="f-save" id="f-save">সংরক্ষণ করুন</button>
-              </div>
-            </div>
-
-            <!-- LIST -->
-            <div class="m-list" id="m-list">
-              <div style="color:rgba(255,255,255,.25);text-align:center;padding:32px;font-size:.85rem">লোড হচ্ছে…</div>
-            </div>
+            <button id="admin-close" class="admin-close-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
           </div>
 
-          <!-- STATS PANEL -->
-          <div id="panel-stats" class="a-panel">
-            <div class="stats-grid">
-              <div class="stat-card green">
-                <div class="stat-num" id="stat-done">—</div>
-                <div class="stat-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="20 6 9 17 4 12" />
+          <div class="admin-content">
+            <!-- TIMELINE PANEL -->
+            <div id="panel-timeline" class="a-panel on">
+              <div class="tl-admin-header">
+                <div class="tl-admin-title">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
                   </svg>
-                  সম্পন্ন
+                  Project Timeline
                 </div>
-              </div>
-              <div class="stat-card yellow">
-                <div class="stat-num" id="stat-inprog">—</div>
-                <div class="stat-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="23 4 23 10 17 10" />
-                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                <button id="add-milestone-btn" class="add-milestone-btn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
                   </svg>
-                  চলছে
-                </div>
+                  নতুন মাইলস্টোন
+                </button>
               </div>
-              <div class="stat-card gray">
-                <div class="stat-num" id="stat-pending">—</div>
-                <div class="stat-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+              <!-- ADD/EDIT FORM -->
+              <div class="m-form" id="m-form">
+                <div class="m-form-title">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
                     <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
                   </svg>
-                  বাকি
+                  <span id="m-form-title-text">নতুন মাইলস্টোন</span>
+                </div>
+                <div class="f-row">
+                  <div class="f-group">
+                    <label class="f-label">মাইলস্টোনের নাম</label>
+                    <input
+                      type="text"
+                      id="f-title"
+                      class="f-input"
+                      placeholder="যেমন: ডেলিভারি পোর্টাল"
+                    />
+                  </div>
+                  <div class="f-group">
+                    <label class="f-label">তারিখ</label>
+                    <input type="date" id="f-date" class="f-input" />
+                  </div>
+                </div>
+                <div class="f-group" style="margin-bottom: 10px">
+                  <label class="f-label">বিবরণ</label>
+                  <input
+                    type="text"
+                    id="f-desc"
+                    class="f-input"
+                    placeholder="এই ধাপে কী করা হয়েছে বা হবে?"
+                  />
+                </div>
+                <div class="f-row">
+                  <div class="f-group">
+                    <label class="f-label">স্ট্যাটাস</label>
+                    <select id="f-status" class="f-input">
+                      <option value="pending">Pending — অপেক্ষমান</option>
+                      <option value="inprogress">In Progress — চলছে</option>
+                      <option value="done">Done — সম্পন্ন</option>
+                    </select>
+                  </div>
+                  <div class="f-group">
+                    <label class="f-label">ক্রম নম্বর</label>
+                    <input
+                      type="number"
+                      id="f-order"
+                      class="f-input"
+                      placeholder="1, 2, 3 …"
+                      min="1"
+                    />
+                  </div>
+                </div>
+                <div class="f-group" style="margin-bottom: 10px">
+                  <label class="f-label">আইকন</label>
+                  <div class="icon-select-wrap">
+                    <div class="icon-preview" id="icon-preview-btn">
+                      <span id="icon-preview-svg">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                        >
+                          <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        style="
+                          color: rgba(255, 255, 255, 0.4);
+                          font-size: 0.82rem;
+                        "
+                        >আইকন বেছে নিন</span
+                      >
+                      <svg
+                        class="arrow"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </div>
+                    <div class="icon-dropdown" id="icon-dropdown">
+                      <div id="icon-grid"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="f-row-actions">
+                  <button class="f-cancel" id="f-cancel">বাতিল</button>
+                  <button class="f-save" id="f-save">সংরক্ষণ করুন</button>
+                </div>
+              </div>
+
+              <!-- LIST -->
+              <div class="m-list" id="m-list">
+                <div
+                  style="
+                    color: rgba(255, 255, 255, 0.25);
+                    text-align: center;
+                    padding: 32px;
+                    font-size: 0.85rem;
+                  "
+                >
+                  লোড হচ্ছে…
+                </div>
+              </div>
+            </div>
+
+            <!-- STATS PANEL -->
+            <div id="panel-stats" class="a-panel">
+              <div class="stats-grid">
+                <div class="stat-card green">
+                  <div class="stat-num" id="stat-done">—</div>
+                  <div class="stat-label">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    সম্পন্ন
+                  </div>
+                </div>
+                <div class="stat-card yellow">
+                  <div class="stat-num" id="stat-inprog">—</div>
+                  <div class="stat-label">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <polyline points="23 4 23 10 17 10" />
+                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                    </svg>
+                    চলছে
+                  </div>
+                </div>
+                <div class="stat-card gray">
+                  <div class="stat-num" id="stat-pending">—</div>
+                  <div class="stat-label">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    বাকি
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <!-- /admin-content -->
+        </div>
+        <!-- /panel-view -->
+      </div>
+      <!-- /admin-shell -->
+    </div>
+    <!-- /admin-modal -->
 
-        </div><!-- /admin-content -->
-      </div><!-- /panel-view -->
-
-    </div><!-- /admin-shell -->
-  </div><!-- /admin-modal -->
-
-
-  <!-- ═══════════════════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════════════════
      MAIN LANDING PAGE
 ══════════════════════════════════════════════════════════ -->
-  <div class="page">
-    <div class="glass-card">
-
-      <!-- SUCCESS OVERLAY -->
-      <div id="success-overlay">
-        <div class="success-ring">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        </div>
-        <h3>ধন্যবাদ!</h3>
-        <p>আপনার ইমেইলটি সফলভাবে তালিকায় যোগ করা হয়েছে।</p>
-        <button class="back-link" onclick="location.reload()">ফিরে যান</button>
-      </div>
-
-      <!-- NAV -->
-      <nav class="nav">
-        <div class="logo">
-          <img src="css/graambazaar.svg" alt="GraamBazaar" class="logo-svg">
-        </div>
-        <div class="nav-pills">
-          <div class="nav-pill">বিশুদ্ধতা</div>
-          <div class="nav-pill">সততা</div>
-          <div class="nav-pill">সেবা</div>
-        </div>
-      </nav>
-      <!-- HERO -->
-      <section class="hero">
-        <div class="hero-badge">
-          <div class="badge-pulse"></div>
-          মাঠের তাজা পণ্য এখন আপনার হাতের মুঠোয়
-        </div>
-        <h2 class="hero-title">
-          আমরা আসছি আপনার শহরে,<br>
-          <span class="hero-grad">নতুন কিছু করতে!</span>
-        </h2>
-        <p class="hero-sub">
-          খাঁটি পণ্য, গ্রাম বাংলার ঐতিহ্য আর আধুনিকতার ছোঁয়ায় গ্রামবাজার হতে যাচ্ছে আপনার বিশ্বস্ত অনলাইন বাজার।
-        </p>
-        <a href="https://www.facebook.com/graambazaar" target="_blank" class="cta-btn">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-          </svg>
-          Facebook এ ফলো করুন
-        </a>
-      </section>
-
-      <!-- SUPPLY CHAIN -->
-      <div class="chain-wrap">
-        <div class="chain-node">
-          <div class="chain-icon-ring" id="chain-farmer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path
-                d="m10 11 11 .9c.6 0 .9.5.8 1.1l-.8 4.5c-.1.7-.6 1.2-1.3 1.2H11l-3-4H3c-.6 0-1-.4-1-1V9c0-.6.4-1 1-1h6l3 4V11z" />
-              <circle cx="18" cy="19" r="2" />
-              <circle cx="7" cy="19" r="2" />
-              <path d="M6 13V7c0-1.7 1.3-3 3-3h3c1.7 0 3 1.3 3 3v3" />
-              <path d="M9 13h6" />
+    <div class="page">
+      <div class="glass-card">
+        <!-- SUCCESS OVERLAY -->
+        <div id="success-overlay">
+          <div class="success-ring">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+            >
+              <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <div class="chain-label">কৃষক</div>
+          <h3>ধন্যবাদ!</h3>
+          <p>আপনার ইমেইলটি সফলভাবে তালিকায় যোগ করা হয়েছে।</p>
+          <button class="back-link" onclick="location.reload()">
+            ফিরে যান
+          </button>
         </div>
 
-        <div class="chain-connector">
-          <div class="chain-fill" id="chain-fill-1"></div>
-        </div>
-
-        <div class="chain-node">
-          <div class="chain-icon-ring" id="chain-hub" >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-              <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
-              <path d="M2 7h20" />
-              <path
-                d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7" />
-            </svg>
+        <!-- NAV -->
+        <nav class="nav">
+          <div class="logo">
+            <img src="css/graambazaar.svg" alt="GraamBazaar" class="logo-svg" />
           </div>
-          <div class="chain-label">গ্রামবাজার</div>
-        </div>
+          <div class="nav-pills">
+            <div class="nav-pill">বিশুদ্ধতা</div>
+            <div class="nav-pill">সততা</div>
+            <div class="nav-pill">সেবা</div>
+          </div>
+        </nav>
+        <!-- HERO -->
+        <section class="hero">
+          <div class="hero-badge">
+            <div class="badge-pulse"></div>
+            মাঠের তাজা পণ্য এখন আপনার হাতের মুঠোয়
+          </div>
+          <h2 class="hero-title">
+            আমরা আসছি আপনার শহরে,<br />
+            <span class="hero-grad">নতুন কিছু করতে!</span>
+          </h2>
+          <p class="hero-sub">
+            খাঁটি পণ্য, গ্রাম বাংলার ঐতিহ্য আর আধুনিকতার ছোঁয়ায় গ্রামবাজার হতে
+            যাচ্ছে আপনার বিশ্বস্ত অনলাইন বাজার।
+          </p>
+          <a
+            href="https://www.facebook.com/graambazaar"
+            target="_blank"
+            class="cta-btn"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              />
+            </svg>
+            Facebook এ ফলো করুন
+          </a>
+        </section>
 
-        <div class="chain-connector">
-          <div class="chain-fill" id="chain-fill-2"></div>
-        </div>
+        <!-- SUPPLY CHAIN -->
+        <div class="chain-wrap">
+          <div class="chain-node">
+            <div class="chain-icon-ring" id="chain-farmer">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m10 11 11 .9c.6 0 .9.5.8 1.1l-.8 4.5c-.1.7-.6 1.2-1.3 1.2H11l-3-4H3c-.6 0-1-.4-1-1V9c0-.6.4-1 1-1h6l3 4V11z"
+                />
+                <circle cx="18" cy="19" r="2" />
+                <circle cx="7" cy="19" r="2" />
+                <path d="M6 13V7c0-1.7 1.3-3 3-3h3c1.7 0 3 1.3 3 3v3" />
+                <path d="M9 13h6" />
+              </svg>
+            </div>
+            <div class="chain-label">কৃষক</div>
+          </div>
 
-        <div class="chain-node">
-          <div class="chain-icon-ring" id="chain-consumer">
-            <svg fill="currentColor" viewBox="0 0 32 32"
-              style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;" version="1.1"
-              xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:serif="http://www.serif.com/"
-              xmlns:xlink="http://www.w3.org/1999/xlink">
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-              <g id="SVGRepo_iconCarrier">
-                <g id="Icon">
-                  <path
-                    d="M4.96,27.999l0.051,0.001l0.043,-0.004c0.191,-0.024 0.957,-0.171 0.957,-0.996c-0,-4.971 4.029,-9 9,-9c0.661,-0 1.327,-0 1.988,-0c4.97,-0 9,4.029 9,9l-0,0c-0,0.021 0,0.041 0.002,0.061c0.015,0.325 0.153,0.537 0.323,0.676c0.178,0.164 0.415,0.263 0.675,0.263c-0,0 1,-0.057 1,-1c-0,-6.075 -4.925,-11 -11,-11c-0.661,-0 -1.327,-0 -1.988,-0c-6.075,-0 -11,4.925 -11,11c-0,-0.05 0.003,-0.092 0.008,-0.127c-0.005,0.041 -0.008,0.084 -0.008,0.127c-0,0.535 0.42,0.972 0.949,0.999Z">
-                  </path>
-                  <path
-                    d="M15.994,3.988c-2.763,-0 -5.006,2.243 -5.006,5.006c-0,2.763 2.243,5.006 5.006,5.006c2.763,0 5.006,-2.243 5.006,-5.006c0,-2.763 -2.243,-5.006 -5.006,-5.006Zm-0,2c1.659,-0 3.006,1.347 3.006,3.006c0,1.659 -1.347,3.006 -3.006,3.006c-1.659,0 -3.006,-1.347 -3.006,-3.006c-0,-1.659 1.347,-3.006 3.006,-3.006Z">
-                  </path>
+          <div class="chain-connector">
+            <div class="chain-fill" id="chain-fill-1"></div>
+          </div>
+
+          <div class="chain-node">
+            <div class="chain-icon-ring" id="chain-hub">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"
+                />
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
+                <path d="M2 7h20" />
+                <path
+                  d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7"
+                />
+              </svg>
+            </div>
+            <div class="chain-label">গ্রামবাজার</div>
+          </div>
+
+          <div class="chain-connector">
+            <div class="chain-fill" id="chain-fill-2"></div>
+          </div>
+
+          <div class="chain-node">
+            <div class="chain-icon-ring" id="chain-consumer">
+              <svg
+                fill="currentColor"
+                viewBox="0 0 32 32"
+                style="
+                  fill-rule: evenodd;
+                  clip-rule: evenodd;
+                  stroke-linejoin: round;
+                  stroke-miterlimit: 2;
+                "
+                version="1.1"
+                xml:space="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:serif="http://www.serif.com/"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <g id="Icon">
+                    <path
+                      d="M4.96,27.999l0.051,0.001l0.043,-0.004c0.191,-0.024 0.957,-0.171 0.957,-0.996c-0,-4.971 4.029,-9 9,-9c0.661,-0 1.327,-0 1.988,-0c4.97,-0 9,4.029 9,9l-0,0c-0,0.021 0,0.041 0.002,0.061c0.015,0.325 0.153,0.537 0.323,0.676c0.178,0.164 0.415,0.263 0.675,0.263c-0,0 1,-0.057 1,-1c-0,-6.075 -4.925,-11 -11,-11c-0.661,-0 -1.327,-0 -1.988,-0c-6.075,-0 -11,4.925 -11,11c-0,-0.05 0.003,-0.092 0.008,-0.127c-0.005,0.041 -0.008,0.084 -0.008,0.127c-0,0.535 0.42,0.972 0.949,0.999Z"
+                    ></path>
+                    <path
+                      d="M15.994,3.988c-2.763,-0 -5.006,2.243 -5.006,5.006c-0,2.763 2.243,5.006 5.006,5.006c2.763,0 5.006,-2.243 5.006,-5.006c0,-2.763 -2.243,-5.006 -5.006,-5.006Zm-0,2c1.659,-0 3.006,1.347 3.006,3.006c0,1.659 -1.347,3.006 -3.006,3.006c-1.659,0 -3.006,-1.347 -3.006,-3.006c-0,-1.659 1.347,-3.006 3.006,-3.006Z"
+                    ></path>
+                  </g>
                 </g>
-              </g>
-            </svg>
+              </svg>
+            </div>
+            <div class="chain-label">গ্রাহক</div>
           </div>
-          <div class="chain-label">গ্রাহক</div>
         </div>
-      </div>
 
-      <!-- CURRENT PHASE BANNER -->
-      <div class="phase-banner" id="phase-banner" style="display:none">
-        <div class="phase-indicator"></div>
-        <div class="phase-text">
-          <strong id="phase-name">লোড হচ্ছে…</strong>
-          <span id="phase-desc"></span>
-        </div>
-      </div>
-
-      <!-- PROGRESS BAR -->
-      <div class="progress-wrap">
-        <div class="progress-header">
-          <span>প্রজেক্ট অগ্রগতি</span>
-          <strong id="progress-pct">0%</strong>
-        </div>
-        <div class="progress-track">
-          <div class="progress-bar" id="progress-bar"></div>
-        </div>
-      </div>
-
-      <!-- PUBLIC TIMELINE -->
-      <section class="timeline-section">
-        <div class="section-heading">
-          <h3>আমাদের পথচলা</h3>
-          <p>GraamBazaar কোথায় আছি এবং কোথায় যাচ্ছি</p>
-        </div>
-        <div class="tl-spine-wrap">
-          <!-- commented the old line for humayoun to understand  -->
-
-          <div class="tl-spine">
-            <div class="tl-spine-prog" id="tl-spine-prog"></div>
+        <!-- CURRENT PHASE BANNER -->
+        <div class="phase-banner" id="phase-banner" style="display: none">
+          <div class="phase-indicator"></div>
+          <div class="phase-text">
+            <strong id="phase-name">লোড হচ্ছে…</strong>
+            <span id="phase-desc"></span>
           </div>
-
-          <div id="public-timeline"></div>
         </div>
-      </section>
 
-      <!-- SUBSCRIBE -->
-      <section class="subscribe-section">
-        <h3>"বিশুদ্ধতার খোঁজে, গ্রামবাজার আপনার পাশে"</h3>
-        <p>আপনার ইমেইল দিয়ে রাখুন, আমরা শুরু করলেই আপনাকে জানিয়ে দিবো।</p>
-        <form id="subscribe-form" class="email-row">
-          <input type="email" name="email" id="email-field" required placeholder="আপনার ইমেইল এড্রেস"
-            class="email-field">
-          <button type="submit" id="sub-btn" class="sub-btn">সাবস্ক্রাইব</button>
-        </form>
-      </section>
+        <!-- PROGRESS BAR -->
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span>প্রজেক্ট অগ্রগতি</span>
+            <strong id="progress-pct">0%</strong>
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
 
-      <footer>
-        <p>© সরাসরি কৃষক থেকে আপনার হাতের মুঠোয়</p>
-        <p>বগুড়া, বাংলাদেশ &nbsp;|&nbsp; info@graambazaar.com</p>
-      </footer>
+        <!-- PUBLIC TIMELINE -->
+        <section class="timeline-section">
+          <div class="section-heading">
+            <h3>আমাদের পথচলা</h3>
+            <p>GraamBazaar কোথায় আছি এবং কোথায় যাচ্ছি</p>
+          </div>
+          <div class="tl-spine-wrap">
+            <!-- commented the old line for humayoun to understand  -->
 
-    </div><!-- /glass-card -->
-  </div><!-- /page -->
+            <div class="tl-spine">
+              <div class="tl-spine-prog" id="tl-spine-prog"></div>
+            </div>
 
-  <!-- ── Scripts ─────────────────────────────────────────── -->
-  <script type="module">
-    import { initCursor, initParticles, runChainAnimation } from './js/effects.js';
-    import { renderPublicTimeline } from './js/timeline.js';
-    import { initAdmin } from './js/admin.js';
-    import { db } from './js/firebase-config.js';
-    import {
-      collection, onSnapshot, query, orderBy
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+            <div id="public-timeline"></div>
+          </div>
+        </section>
 
-    document.addEventListener('DOMContentLoaded', () => {
-      initCursor();
-      initParticles();
-      runChainAnimation();
-      initAdmin();
+        <!-- SUBSCRIBE -->
+        <section class="subscribe-section">
+          <h3>"বিশুদ্ধতার খোঁজে, গ্রামবাজার আপনার পাশে"</h3>
+          <p>আপনার ইমেইল দিয়ে রাখুন, আমরা শুরু করলেই আপনাকে জানিয়ে দিবো।</p>
+          <form id="subscribe-form" class="email-row">
+            <input
+              type="email"
+              name="email"
+              id="email-field"
+              required
+              placeholder="আপনার ইমেইল এড্রেস"
+              class="email-field"
+            />
+            <button type="submit" id="sub-btn" class="sub-btn">
+              সাবস্ক্রাইব
+            </button>
+          </form>
+        </section>
 
-      // ── Real-time public timeline ──────────────────────────
-      const q = query(collection(db, 'milestones'), orderBy('order', 'asc'));
-      onSnapshot(q, (snap) => {
-        const milestones = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderPublicTimeline(milestones);
+        <footer>
+          <p>© সরাসরি কৃষক থেকে আপনার হাতের মুঠোয়</p>
+          <p>বগুড়া, বাংলাদেশ &nbsp;|&nbsp; info@graambazaar.com</p>
+        </footer>
+      </div>
+      <!-- /glass-card -->
+    </div>
+    <!-- /page -->
+
+    <!-- ── Scripts ─────────────────────────────────────────── -->
+    <script type="module">
+      import {
+        initCursor,
+        initParticles,
+        runChainAnimation,
+      } from "./js/effects.js";
+      import { renderPublicTimeline } from "./js/timeline.js";
+      import { initAdmin } from "./js/admin.js";
+      import { db } from "./js/firebase-config.js";
+      import {
+        collection,
+        onSnapshot,
+        query,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initCursor();
+        initParticles();
+        runChainAnimation();
+        initAdmin();
+
+        // ── Real-time public timeline ──────────────────────────
+        const q = query(collection(db, "milestones"), orderBy("order", "asc"));
+        onSnapshot(q, (snap) => {
+          const milestones = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          renderPublicTimeline(milestones);
+        });
+
+        // ── Subscribe form ─────────────────────────────────────
+        const SCRIPT =
+          "https://script.google.com/macros/s/AKfycbxO7Z2In__CHrUecv5r8JthXRhmoBRtzKVUzvW1ipK7brrRxETGaWzZKbPkYSh3_tad/exec";
+        const form = document.getElementById("subscribe-form");
+        const btn = document.getElementById("sub-btn");
+
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          btn.disabled = true;
+          btn.textContent = "অপেক্ষা করুন…";
+          fetch(SCRIPT, {
+            method: "POST",
+            body: new FormData(form),
+            mode: "no-cors",
+          }).catch(() => {});
+          setTimeout(() => {
+            document.getElementById("success-overlay").style.display = "flex";
+            form.reset();
+          }, 1400);
+        });
       });
-
-      // ── Subscribe form ─────────────────────────────────────
-      const SCRIPT = 'https://script.google.com/macros/s/AKfycbxO7Z2In__CHrUecv5r8JthXRhmoBRtzKVUzvW1ipK7brrRxETGaWzZKbPkYSh3_tad/exec';
-      const form = document.getElementById('subscribe-form');
-      const btn = document.getElementById('sub-btn');
-
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        btn.disabled = true;
-        btn.textContent = 'অপেক্ষা করুন…';
-        fetch(SCRIPT, { method: 'POST', body: new FormData(form), mode: 'no-cors' }).catch(() => { });
-        setTimeout(() => {
-          document.getElementById('success-overlay').style.display = 'flex';
-          form.reset();
-        }, 1400);
-      });
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
